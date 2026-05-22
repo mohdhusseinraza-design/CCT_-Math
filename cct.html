@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MATH CCT Project</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #f5f0e8; --dark: #1a1208; --gold: #c8922a;
+      --rust: #b94e2a; --sage: #5a6b4b; --text: #2e2510; --muted: #7a6e5a;
+    }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--cream); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center; padding: 4rem 2rem; position: relative;
+      background: radial-gradient(ellipse at 20% 30%, rgba(200,146,42,0.12) 0%, transparent 55%),
+                  radial-gradient(ellipse at 80% 70%, rgba(185,78,42,0.10) 0%, transparent 55%), var(--cream);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8922a' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-eyebrow { font-size: .75rem; font-weight: 500; letter-spacing: .25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp .8s ease forwards .2s; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem,7vw,6rem); font-weight: 700; line-height: 1.05; color: var(--dark); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp .8s ease forwards .4s; }
+    .hero h1 em { font-style: italic; color: var(--rust); }
+    .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 500px; opacity: 0; animation: fadeUp .8s ease forwards .6s; }
+    .hero-divider { width: 60px; height: 2px; background: var(--gold); margin: 2.5rem auto; opacity: 0; animation: fadeUp .8s ease forwards .8s; }
+    .members { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; opacity: 0; animation: fadeUp .8s ease forwards 1s; }
+    .member-tag { font-size: .72rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: rgba(200,146,42,.08); border: 1px solid rgba(200,146,42,.2); border-radius: 20px; padding: .3rem .9rem; }
+    .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: .5rem; font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); opacity: 0; animation: fadeUp .8s ease forwards 1.2s; }
+    .scroll-hint span { display: block; width: 1px; height: 40px; background: var(--gold); animation: scrollLine 1.8s ease-in-out infinite; }
+    @keyframes scrollLine { 0%,100%{transform:scaleY(1);opacity:1} 50%{transform:scaleY(.3);opacity:.3} }
+
+    .section { max-width: 860px; margin: 0 auto; padding: 6rem 2rem; border-bottom: 1px solid rgba(200,146,42,.15); }
+    .section:last-of-type { border-bottom: none; }
+    .section-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: .75rem; flex-wrap: wrap; }
+    .section-number { font-size: .7rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+    .section-author { font-size: .7rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: white; background: var(--rust); border-radius: 20px; padding: .2rem .7rem; }
+    .section h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 700; color: var(--dark); line-height: 1.2; margin-bottom: .4rem; }
+    .section h2 span { color: var(--rust); font-style: italic; }
+    .function-tag { display: inline-block; font-size: .72rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--sage); background: rgba(90,107,75,.1); border: 1px solid rgba(90,107,75,.25); border-radius: 20px; padding: .3rem .9rem; margin-bottom: 2rem; }
+    .graph-wrapper { width: 100%; border-radius: 8px; overflow: hidden; border: 1px solid rgba(200,146,42,.2); box-shadow: 0 8px 40px rgba(26,18,8,.08); margin-bottom: 3rem; }
+    .graph-wrapper iframe { width: 100%; height: 480px; border: none; display: block; }
+    .equations { display: flex; gap: 1.5rem; margin-bottom: 3rem; flex-wrap: wrap; }
+    .eq-card { flex: 1; min-width: 200px; background: white; border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; padding: 1rem 1.25rem; box-shadow: 0 2px 12px rgba(26,18,8,.05); }
+    .eq-label { font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+    .eq-value { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--dark); }
+    .para-block { margin-bottom: 2.5rem; }
+    .para-block h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 400; font-style: italic; color: var(--rust); margin-bottom: .75rem; padding-bottom: .5rem; border-bottom: 1px solid rgba(185,78,42,.15); }
+    .para-block p { font-size: .97rem; color: var(--text); line-height: 1.85; }
+    footer { text-align: center; padding: 3rem 2rem; font-size: .8rem; letter-spacing: .08em; background: var(--dark); color: rgba(245,240,232,.4); }
+    footer strong { color: var(--gold); }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    @media(max-width:600px){ .section{padding:4rem 1.25rem} .graph-wrapper iframe{height:320px} .equations{flex-direction:column} }
+  </style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="hero-eyebrow">MHF4U · Functions in the Real World</p>
+  <h1><em>MATH</em> CCT Project</h1>
+  <div class="hero-divider"></div>
+  <p class="hero-sub">A photo album capturing real-world mathematical functions through moments, objects, and experiences from our time in Malaysia and at Sunway.</p>
+  <div class="members">
+    <span class="member-tag">MH</span>
+    <span class="member-tag">Blake</span>
+    <span class="member-tag">Wil</span>
+    <span class="member-tag">Eilyaz</span>
+  </div>
+  <div class="scroll-hint">Scroll<span></span></div>
+</header>
+
+<!-- FUNCTION 1 -->
+<section class="section">
+  <div class="section-meta"><p class="section-number">Function 01</p><span class="section-author">MH</span></div>
+  <h2>Cooling Tower — <span>Reciprocal Function</span></h2>
+  <span class="function-tag">y = 1/x</span>
+  <div class="graph-wrapper">
+    <iframe src="https://www.desmos.com/calculator/mssjdeih0r" title="Reciprocal Function – Cooling Tower"></iframe>
+  </div>
+  <div class="equations">
+    <div class="eq-card"><p class="eq-label">Parent Function</p><p class="eq-value">y = 1/x</p></div>
+    <div class="eq-card"><p class="eq-label">Transformed Function</p><p class="eq-value">y = 1/(x − 0.6) − 0.4 &nbsp;{0.8 &lt; x &lt; 3}</p></div>
+  </div>
+  <div class="para-block">
+    <h3>Transformations</h3>
+    <p>To model the right edge of the cooling tower, I started with the basic reciprocal function y = 1/x and made two adjustments. I shifted it 0.6 units to the right by replacing x with (x − 0.6), which moved the vertical asymptote to sit at x = 0.6 — right along the centre of the tower. I also dropped the whole curve down by 0.4 units, pushing the horizontal asymptote to y = −0.4 so it lines up better with the base of the tower. The way the cooling tower narrows in the middle and flares outward is a natural fit for this function, since the reciprocal curve drops steeply near the asymptote and levels out further away. I restricted the domain to between 0.8 and 3 so the curve only shows the visible part of the tower's outline.</p>
+  </div>
+  <div class="para-block">
+    <h3>Domain &amp; Range</h3>
+    <p>The domain is {x ∈ ℝ | 0.8 &lt; x &lt; 3}. In real-world terms, this covers the horizontal distance from roughly 0.8 metres to 3 metres out from the centre of the tower — exactly the portion of the right edge visible in the photo. The range is {y ∈ ℝ | −0.4 &lt; y &lt; 4}, representing the height of the tower's outline above ground across that section. The lower bound of −0.4 is where the horizontal asymptote sits after the vertical shift, and the upper bound of 4 is approximately where the visible edge of the tower reaches at its tallest point in the image.</p>
+  </div>
+</section>
+
+<!-- FUNCTION 2 -->
+<section class="section">
+  <div class="section-meta"><p class="section-number">Function 02</p><span class="section-author">Blake</span></div>
+  <h2>— <span>Reciprocal Squared Function</span></h2>
+  <span class="function-tag">y = 1/x²</span>
+  <div class="graph-wrapper">
+    <iframe src="https://www.desmos.com/calculator/4hz0w0s1qx" title="Reciprocal Squared Function"></iframe>
+  </div>
+  <div class="equations">
+    <div class="eq-card"><p class="eq-label">Parent Function</p><p class="eq-value">y = 1/x²</p></div>
+    <div class="eq-card"><p class="eq-label">Transformed Function</p><p class="eq-value">y = 2.2/(x − 0.3)² − 1.5 &nbsp;{−2 ≤ x ≤ 2}</p></div>
+  </div>
+  <div class="para-block">
+    <h3>Transformations</h3>
+    <p>Starting from the parent function y = 1/x², three transformations were applied to fit the shape in the photo. First, the graph was shifted 0.3 units to the right by replacing x with (x − 0.3), which moved the vertical asymptote from x = 0 to x = 0.3, aligning the curve better with the subject. Second, a vertical stretch of 2.2 was applied, making the two branches of the curve taller and narrower so they matched the shape more closely. Third, the whole graph was brought down 1.5 units, shifting the horizontal asymptote to y = −1.5. The result is a symmetric curve with two upward-opening branches sitting on either side of the asymptote at x = 0.3.</p>
+  </div>
+  <div class="para-block">
+    <h3>Domain &amp; Range</h3>
+    <p>The domain is {x ∈ ℝ | x ≠ 0.3, −2 ≤ x ≤ 2}, covering the full horizontal width of the subject in the photo while excluding the asymptote at x = 0.3 where the function is undefined. The range is {y ∈ ℝ | −1 ≤ y ≤ 5}, which captures the vertical spread of both branches within the restricted domain — the lower bound of −1 comes from the downward shift, and the upper bound of 5 is where the curve peaks closest to the asymptote.</p>
+  </div>
+</section>
+
+<!-- FUNCTION 3 -->
+<section class="section">
+  <div class="section-meta"><p class="section-number">Function 03</p><span class="section-author">MH</span></div>
+  <h2>Rollercoaster — <span>Polynomial Function</span></h2>
+  <span class="function-tag">Degree &gt; 2</span>
+  <div class="graph-wrapper">
+    <iframe src="https://www.desmos.com/calculator/nrangp5567" title="Polynomial Function – Rollercoaster"></iframe>
+  </div>
+  <div class="equations">
+    <div class="eq-card"><p class="eq-label">Parent Function</p><p class="eq-value">y = x³</p></div>
+    <div class="eq-card"><p class="eq-label">Transformed Function</p><p class="eq-value">y = 0.3(x+1.8)(x−2.3)(x−0.1) + 3 &nbsp;{−2.5 &lt; x &lt; 3}</p></div>
+  </div>
+  <div class="para-block">
+    <h3>Transformations</h3>
+    <p>A rollercoaster track is a great real-world example of a higher degree polynomial because of the way it rises, peaks, and then comes back down — exactly what a cubic function does. I wrote the equation in factored form to control where the curve crosses zero. The three roots were placed at x = −1.8, x = 0.1, and x = 2.3, setting the curve's turning points to match the shape of the track in the photo. A vertical compression of 0.3 was applied so the curve wouldn't be too steep, and I shifted the whole thing up 3 units so the track stays above the x-axis — since the rollercoaster is always above ground. The negative leading coefficient flips the curve so it rises then falls, matching the visible drop of the track. The domain is restricted to between −2.5 and 3 to only show the section of track in the photo.</p>
+  </div>
+  <div class="para-block">
+    <h3>Domain &amp; Range</h3>
+    <p>The domain is {x ∈ ℝ | −2.5 &lt; x &lt; 3}, representing roughly 5.5 metres of horizontal track length from start to end of the visible section. The range is {y ∈ ℝ | 0 &lt; y &lt; 4.5}, covering the height of the track from just above ground level up to its peak at around 4.5 metres. The lower bound being above zero makes sense physically since the track never touches the ground in the photo, and 4.5 metres is approximately the highest point the track reaches at its crest.</p>
+  </div>
+</section>
+
+<!-- FUNCTION 4 -->
+<section class="section">
+  <div class="section-meta"><p class="section-number">Function 04</p><span class="section-author">Wil</span></div>
+  <h2>— <span>Trigonometric Function with Asymptote</span></h2>
+  <span class="function-tag">y = cot(x)</span>
+  <div class="graph-wrapper">
+    <iframe src="https://www.desmos.com/calculator/fsmvlzbd17" title="Cotangent Function"></iframe>
+  </div>
+  <div class="equations">
+    <div class="eq-card"><p class="eq-label">Parent Function</p><p class="eq-value">y = a·cot(b(x − h)) + k</p></div>
+    <div class="eq-card"><p class="eq-label">Transformed Function</p><p class="eq-value">y = 30·cot(0.2(x + 5.2)) &nbsp;{−9 ≤ x ≤ 9}</p></div>
+  </div>
+  <div class="para-block">
+    <h3>Transformations</h3>
+    <p>The parent cotangent function was transformed in three ways to fit the shape in the photo. A vertical stretch of 30 was applied, dramatically increasing the steepness of the curve near the asymptotes so it shoots up and drops down much more sharply than the basic cot(x) would. A horizontal stretch was introduced through the 0.2 coefficient inside the function, which widens the period from π to roughly 15.71 units — spreading the curve out across a much larger x range and giving each branch a long, gentle descent. The graph was also shifted 5.2 units to the left, repositioning the asymptotes from their default positions at multiples of π to x = −5.2 + 5πn, aligning them with the subject in the photo. No vertical shift was applied, so the midline stays at y = 0 and the curve crosses the x-axis exactly halfway between each pair of asymptotes.</p>
+  </div>
+  <div class="para-block">
+    <h3>Domain &amp; Range</h3>
+    <p>The domain is restricted to {x ∈ ℝ | −9 ≤ x ≤ 9}, which captures the horizontal span of the subject visible in the photo and falls between two asymptotes so the function is continuous throughout. The range is {y ∈ ℝ | −2 ≤ y ≤ 1}, capturing the vertical spread of the curve within the visible region — starting high near one asymptote and decreasing sharply toward the other end of the domain.</p>
+  </div>
+</section>
+
+<!-- FUNCTION 5 -->
+<section class="section">
+  <div class="section-meta"><p class="section-number">Function 05</p><span class="section-author">Blake</span></div>
+  <h2>— <span>Sinusoidal Function</span></h2>
+  <span class="function-tag">y = cos(x)</span>
+  <div class="graph-wrapper">
+    <iframe src="https://www.desmos.com/calculator/nsnkrnfbcp" title="Sinusoidal Function"></iframe>
+  </div>
+  <div class="equations">
+    <div class="eq-card"><p class="eq-label">Parent Function</p><p class="eq-value">y = cos(x)</p></div>
+    <div class="eq-card"><p class="eq-label">Transformed Function</p><p class="eq-value">y = 1.3·cos(π/4·(x + 2.6)) + 0.35 &nbsp;{−1.8 ≤ x ≤ 3}</p></div>
+  </div>
+  <div class="para-block">
+    <h3>Transformations</h3>
+    <p>Four transformations were applied to the parent cosine function to match the wave shape in the photo. The amplitude was increased to 1.3, stretching the curve vertically so the peaks and troughs are taller and deeper than the standard cosine wave. The period was changed to 8 by using π/4 as the coefficient inside the function — since 2π ÷ (π/4) = 8, meaning one full cycle takes 8 horizontal units. The curve was shifted 2.6 units to the left so the peak of the wave lines up with the correct part of the subject. Finally, a vertical shift of 0.35 units upward raises the midline of the wave slightly above the x-axis, reflecting the real-world position of the shape in the photo.</p>
+  </div>
+  <div class="para-block">
+    <h3>Domain &amp; Range</h3>
+    <p>The domain is restricted to {x ∈ ℝ | −1.8 ≤ x ≤ 3}, capturing the horizontal extent of roughly one full wave cycle visible in the photograph. The range is {y ∈ ℝ | −0.95 ≤ y ≤ 1.65}, which comes directly from the amplitude and vertical shift — the maximum is 1.3 + 0.35 = 1.65 at the peaks, and the minimum is −1.3 + 0.35 = −0.95 at the troughs. Both bounds align with what's physically visible in the image.</p>
+  </div>
+</section>
+
+<!-- FUNCTION 6 -->
+<section class="section">
+  <div class="section-meta"><p class="section-number">Function 06</p><span class="section-author">Eilyaz</span></div>
+  <h2>— <span>Exponential Function</span></h2>
+  <span class="function-tag">y = eˣ</span>
+  <div class="graph-wrapper">
+    <iframe src="https://www.desmos.com/calculator/tlknlqydap" title="Exponential Function"></iframe>
+  </div>
+  <div class="equations">
+    <div class="eq-card"><p class="eq-label">Parent Function</p><p class="eq-value">y = eˣ</p></div>
+    <div class="eq-card"><p class="eq-label">Transformed Function</p><p class="eq-value">f(x) = 0.3e^(−(x+1.4)) − 0.6 &nbsp;{−2 &lt; x &lt; 0.9}</p></div>
+  </div>
+  <div class="para-block">
+    <h3>Transformations</h3>
+    <p>The parent exponential function y = eˣ went through four transformations to fit the curve in the photo. A vertical compression by a factor of 0.3 scales the output values down so the curve stays relatively flat rather than shooting up rapidly like a standard exponential. The negative exponent reflects the curve across the y-axis, flipping it so it decreases from left to right instead of increasing — giving it that decaying shape. A horizontal shift of 1.4 units to the left moves the curve into position over the subject in the photo. Finally, shifting down 0.6 units drops the horizontal asymptote from y = 0 to y = −0.6, keeping the curve just below the x-axis throughout the visible region.</p>
+  </div>
+  <div class="para-block">
+    <h3>Domain &amp; Range</h3>
+    <p>The domain is restricted to {x ∈ ℝ | −2 &lt; x &lt; 0.9}, corresponding to the horizontal width of the subject visible in the photograph. Within this interval the curve is smoothly decreasing and well-behaved. The range is {y ∈ ℝ | −0.58 &lt; y &lt; −0.17}, a narrow band of values just below the x-axis. This makes sense given the vertical compression and downward shift — the curve never strays far from its asymptote at y = −0.6, staying within a small range of negative output values across the entire domain.</p>
+  </div>
+</section>
+
+<!-- FUNCTION 7 -->
+<section class="section">
+  <div class="section-meta"><p class="section-number">Function 07</p><span class="section-author">Eilyaz</span></div>
+  <h2>— <span>Logarithmic Function</span></h2>
+  <span class="function-tag">y = log(x)</span>
+  <div class="graph-wrapper">
+    <iframe src="https://www.desmos.com/calculator/coyy3pb1yd" title="Logarithmic Function"></iframe>
+  </div>
+  <div class="equations">
+    <div class="eq-card"><p class="eq-label">Parent Function</p><p class="eq-value">y = log(x)</p></div>
+    <div class="eq-card"><p class="eq-label">Transformed Function</p><p class="eq-value">f(x) = 34·log₂(−100(x−17)) − 430 &nbsp;{x &lt; 17}</p></div>
+  </div>
+  <div class="para-block">
+    <h3>Transformations</h3>
+    <p>This one needed quite a few transformations to get the logarithmic curve to match the shape in the photo. A vertical stretch of 34 makes the curve much steeper than a standard logarithm — necessary because the shape in the image drops very sharply. The negative sign inside the logarithm reflects the curve across the y-axis so it decreases from left to right rather than increasing, giving it that falling shape. A horizontal compression by a factor of 100 squishes the curve so it changes very quickly over a small x range. The whole graph was then shifted 17 units to the right and 430 units downward, repositioning the steep section of the curve to match exactly where the shape appears in the photo.</p>
+  </div>
+  <div class="para-block">
+    <h3>Domain &amp; Range</h3>
+    <p>The domain is {x ∈ ℝ | x &lt; 17}, which comes from the requirement that the argument inside the logarithm must be positive. Since the argument is −100(x − 17), it is only positive when x &lt; 17, so the function only exists to the left of that point — which is also exactly where the visible shape in the photo is located. The range is all real numbers {y ∈ ℝ}, because as x approaches 17 from the left the output goes to negative infinity, and as x decreases the output increases without bound, with no restriction on vertical values within the domain.</p>
+  </div>
+</section>
+
+<!-- FUNCTION 8 -->
+<section class="section">
+  <div class="section-meta"><p class="section-number">Function 08</p><span class="section-author">Wil</span></div>
+  <h2>Fountain — <span>Quadratic Function</span></h2>
+  <span class="function-tag">y = a(x−h)² + k</span>
+  <div class="graph-wrapper">
+    <iframe src="https://www.desmos.com/calculator/nwqhenhpvz" title="Quadratic Function – Fountain"></iframe>
+  </div>
+  <div class="equations">
+    <div class="eq-card"><p class="eq-label">Parent Function</p><p class="eq-value">y = x²</p></div>
+    <div class="eq-card"><p class="eq-label">Transformed Function</p><p class="eq-value">y = −0.04(x − 0)² + 1 &nbsp;{−10 ≤ x ≤ 10}</p></div>
+  </div>
+  <div class="para-block">
+    <h3>Transformations</h3>
+    <p>A fountain is one of the most natural real-world examples of a parabola — the water jets arc upward and fall back down in a perfect curved path. Starting from the parent function y = x², two main transformations were applied. A vertical reflection through the negative leading coefficient flips the parabola downward to match the arching water jets, which go up then come back down. A vertical compression of 0.04 makes the curve very wide and shallow, matching the gentle arc of the spray rather than a sharp narrow peak. No horizontal shift was needed since the vertex sits naturally at the centre of the fountain, so h = 0. A vertical shift of 1 unit upward raises the vertex to (0, 1), aligning it with the maximum height the water reaches at the top of the arc.</p>
+  </div>
+  <div class="para-block">
+    <h3>Domain &amp; Range</h3>
+    <p>The domain is restricted to {x ∈ ℝ | −10 ≤ x ≤ 10}, representing the full horizontal spread of the fountain's water jets from one side to the other — 20 units total, centred at the origin. The range is {y ∈ ℝ | −3 ≤ y ≤ 1}, which covers the vertical extent of the parabola within the domain. The maximum of y = 1 is the vertex at the top of the arc, and the minimum at the edges of the domain comes from substituting x = ±10 into the equation: y = −0.04(100) + 1 = −3. This matches the physical reality of the water jets falling back down past the base level of the fountain.</p>
+  </div>
+</section>
+
+<!-- FUNCTION 9 -->
+<section class="section">
+  <div class="section-meta"><p class="section-number">Function 09</p><span class="section-author">MH</span></div>
+  <h2>Staircase Railing — <span>Linear Function</span></h2>
+  <span class="function-tag">y = mx + b</span>
+  <div class="graph-wrapper">
+    <iframe src="https://www.desmos.com/calculator/gk3omy4twl" title="Linear Function – Staircase Railing"></iframe>
+  </div>
+  <div class="equations">
+    <div class="eq-card"><p class="eq-label">Parent Function</p><p class="eq-value">y = x</p></div>
+    <div class="eq-card"><p class="eq-label">Transformed Function</p><p class="eq-value">y = −0.7x + 4 &nbsp;{0 &lt; x &lt; 6}</p></div>
+  </div>
+  <div class="para-block">
+    <h3>Transformations</h3>
+    <p>The staircase railing is one of the most straightforward real-world examples of a linear function — it's a perfectly straight line going diagonally across the photo. Starting from y = x, two transformations were made. The slope was changed to −0.7, which does two things at once: the negative sign reflects the line downward so it slopes from top-left to bottom-right, matching the direction the railing descends as you walk down the stairs; and the 0.7 compresses the steepness slightly so it isn't a full 45-degree angle. A vertical shift of 4 units upward was also applied by adding 4, moving the y-intercept up to 4 — positioning the top of the railing at a height of 4 units on the graph, which matches where it appears in the photo. The domain was restricted to between 0 and 6 to cover only the visible length of the railing.</p>
+  </div>
+  <div class="para-block">
+    <h3>Domain &amp; Range</h3>
+    <p>The domain is {x ∈ ℝ | 0 &lt; x &lt; 6}, representing the horizontal length of the staircase railing across the photo — approximately 6 metres from the base of the stairs to the top. The range is {y ∈ ℝ | −0.2 &lt; y &lt; 4}, representing the height of the railing above the ground across that distance. At x = 0 the railing starts at a height of 4 metres, and by x = 6 it has come down to about −0.2, which is effectively ground level. The slight negative lower bound is just a result of the linear equation extending slightly past ground level — in reality the railing ends right at the bottom of the stairs.</p>
+  </div>
+</section>
+
+<footer>
+  <p>MHF4U · Photo Album Project &nbsp;·&nbsp; <strong>MATH CCT Project</strong> &nbsp;·&nbsp; Sunway International School</p>
+</footer>
+
+</body>
+</html>
